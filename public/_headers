@@ -1,0 +1,69 @@
+# Cloudflare Pages headers configuration
+# This file configures MIME types and other headers for proper deployment
+
+# JavaScript and TypeScript files
+/*.js
+  Content-Type: application/javascript
+
+/*.mjs
+  Content-Type: application/javascript
+
+/*.ts
+  Content-Type: application/javascript
+
+/*.tsx
+  Content-Type: application/javascript
+
+# CSS files
+/*.css
+  Content-Type: text/css
+
+# JSON files
+/*.json
+  Content-Type: application/json
+
+# Font files
+/*.woff
+  Content-Type: font/woff
+
+/*.woff2
+  Content-Type: font/woff2
+
+/*.ttf
+  Content-Type: font/ttf
+
+/*.otf
+  Content-Type: font/otf
+
+# Image files
+/*.png
+  Content-Type: image/png
+
+/*.jpg
+  Content-Type: image/jpeg
+
+/*.jpeg
+  Content-Type: image/jpeg
+
+/*.gif
+  Content-Type: image/gif
+
+/*.svg
+  Content-Type: image/svg+xml
+
+/*.webp
+  Content-Type: image/webp
+
+/*.ico
+  Content-Type: image/x-icon
+
+# HTML files
+/*.html
+  Content-Type: text/html
+
+# Security headers for all files
+/*
+  X-Frame-Options: DENY
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: camera=(), microphone=(), geolocation=()
