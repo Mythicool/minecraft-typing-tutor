@@ -1,18 +1,28 @@
 # Cloudflare Pages headers configuration
-# This file configures MIME types and other headers for proper deployment
 
-# JavaScript and TypeScript files
-/*.js
-  Content-Type: application/javascript
+# Main entry point and all JavaScript files
+/*
+  X-Content-Type-Options: nosniff
+  X-Frame-Options: DENY
 
-/*.mjs
-  Content-Type: application/javascript
+# JavaScript files with explicit MIME type
+/assets/*.js
+  Content-Type: application/javascript; charset=utf-8
 
-/*.ts
-  Content-Type: application/javascript
+*.js
+  Content-Type: application/javascript; charset=utf-8
 
-/*.tsx
-  Content-Type: application/javascript
+/src/main.tsx
+  Content-Type: application/javascript; charset=utf-8
+
+/src/*.tsx
+  Content-Type: application/javascript; charset=utf-8
+
+/src/*.ts
+  Content-Type: application/javascript; charset=utf-8
+
+*.mjs
+  Content-Type: application/javascript; charset=utf-8
 
 # CSS files
 /*.css

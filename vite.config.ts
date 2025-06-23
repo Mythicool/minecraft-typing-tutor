@@ -10,18 +10,31 @@ export default defineConfig({
     assetsDir: 'assets',
     sourcemap: false,
     // Optimize for production
-    minify: 'terser',
+    minify: 'esbuild',
+    target: 'es2015',
     rollupOptions: {
       output: {
-        // Ensure consistent file naming
+        // Ensure consistent file naming with .js extension
         entryFileNames: 'assets/[name]-[hash].js',
         chunkFileNames: 'assets/[name]-[hash].js',
-        assetFileNames: 'assets/[name]-[hash].[ext]'
+        assetFileNames: (assetInfo) => {
+          if (!assetInfo.name) return `assets/[name]-[hash][extname]`;
+          const info = assetInfo.name.split('.');
+          const ext = info[info.length - 1];
+          if (/png|jpe?g|svg|gif|tiff|bmp|ico/i.test(ext)) {
+            return `assets/images/[name]-[hash][extname]`;
+          }
+          if (/css/i.test(ext)) {
+            return `assets/css/[name]-[hash][extname]`;
+          }
+          return `assets/[name]-[hash][extname]`;
+        },
+        format: 'es'
       }
     }
   },
   // Ensure proper base path
-  base: './',
+  base: '/',
   // Server configuration for development
   server: {
     port: 5173,

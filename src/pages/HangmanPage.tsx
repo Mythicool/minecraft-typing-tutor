@@ -50,7 +50,7 @@ const ScoreDisplay = styled.div`
   text-shadow: 1px 1px 0px ${theme.colors.ui.background};
 `;
 
-const GameStatus = styled.div<{ status: 'won' | 'lost' | 'playing' }>`
+const GameStatus = styled.div<{ status: 'won' | 'lost' | 'playing' | 'paused' }>`
   font-family: 'Press Start 2P', ${theme.fonts.primary};
   font-size: ${theme.fontSizes.lg};
   text-align: center;
@@ -72,6 +72,12 @@ const GameStatus = styled.div<{ status: 'won' | 'lost' | 'playing' }>`
           background: ${theme.colors.ui.error};
           color: ${theme.colors.ui.text};
           border: 3px solid ${theme.colors.secondary.redstone};
+        `;
+      case 'paused':
+        return `
+          background: ${theme.colors.secondary.gold};
+          color: ${theme.colors.ui.background};
+          border: 3px solid ${theme.colors.secondary.iron};
         `;
       default:
         return `

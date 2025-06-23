@@ -1,5 +1,5 @@
 import { useState, useCallback, useEffect } from 'react';
-import type { HangmanGameState, HangmanWord, HangmanSession, DifficultyLevel, HangmanCategory } from '../types/index';
+import type { HangmanGameState, HangmanSession, DifficultyLevel, HangmanCategory } from '../types/index';
 import { getRandomWord } from '../data/hangmanWords';
 
 const MAX_INCORRECT_GUESSES = 6;

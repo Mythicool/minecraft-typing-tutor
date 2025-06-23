@@ -159,7 +159,6 @@ interface WordDisplayProps {
 
 export const WordDisplay: React.FC<WordDisplayProps> = ({
   word,
-  displayWord,
   hint,
   category,
   difficulty,

@@ -1,6 +1,6 @@
 import type { HangmanSession, HangmanStats, Achievement } from '../types/index';
 import { achievements } from '../data/achievements';
-import { hangmanSessionsStorage, hangmanStatsStorage } from './storage';
+import { hangmanSessionsStorage } from './storage';
 
 export const checkHangmanAchievements = (
   session: HangmanSession,
@@ -59,17 +59,9 @@ export const checkHangmanAchievements = (
   }
 
   // Category explorer - check if won in all categories
-  const categories = ['blocks', 'items', 'mobs', 'biomes', 'crafting', 'commands', 'phrases', 'technical'];
-  const wonCategories = new Set(
-    sessions.filter(s => s.won).map(s => {
-      // We need to get the word to determine category
-      // For now, we'll assume this is tracked elsewhere or implement later
-      return 'blocks'; // Placeholder
-    })
-  );
-  if (wonCategories.size >= categories.length) {
-    addAchievement('hangman-category-explorer');
-  }
+  // Note: This would require storing category info in sessions
+  // For now, we'll skip this achievement check
+  // TODO: Implement category tracking in sessions
 
   // High scorer
   if (session.score >= 500) {
