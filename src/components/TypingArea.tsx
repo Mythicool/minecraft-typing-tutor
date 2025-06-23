@@ -17,29 +17,46 @@ interface TypingAreaProps {
 const Container = styled.div`
   position: relative;
   width: 100%;
-  max-width: 800px;
+  max-width: min(800px, 100% - 2rem);
   margin: 0 auto;
+  padding: 0 ${theme.spacing.sm};
+
+  @media (min-width: ${theme.breakpoints.md}) {
+    padding: 0;
+  }
 `;
 
 const TextDisplay = styled.div`
   font-family: 'Press Start 2P', ${theme.fonts.mono};
   font-size: ${theme.fontSizes.lg};
-  line-height: 2;
-  padding: ${theme.spacing.xl};
+  line-height: ${theme.typography.lineHeight.relaxed};
+  padding: clamp(${theme.spacing.md}, 4vw, ${theme.spacing.xl});
   background: ${theme.colors.ui.background};
   border: 3px solid ${theme.colors.ui.border};
   border-radius: ${theme.borderRadius.md};
-  min-height: 200px;
+  min-height: clamp(150px, 25vh, 250px);
   position: relative;
-  overflow-wrap: break-word;
-  word-break: break-word;
-  
+
+  /* Enhanced word wrapping for typing content */
+  ${theme.typography.wordWrap.preserve}
+
   /* Minecraft-style inner shadow */
   box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3);
-  
+
   &:focus-within {
     border-color: ${theme.colors.secondary.diamond};
     box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3), 0 0 0 2px rgba(0, 191, 255, 0.3);
+  }
+
+  /* Responsive typography */
+  @media (max-width: ${theme.breakpoints.sm}) {
+    font-size: ${theme.fontSizes.base};
+    line-height: ${theme.typography.lineHeight.normal};
+  }
+
+  @media (max-width: 480px) {
+    font-size: ${theme.fontSizes.sm};
+    padding: ${theme.spacing.md};
   }
 `;
 
@@ -101,6 +118,16 @@ const Instructions = styled.div`
   padding: ${theme.spacing.sm};
   background: rgba(0, 0, 0, 0.2);
   border-radius: ${theme.borderRadius.sm};
+
+  /* Enhanced word wrapping for instructions */
+  ${theme.typography.wordWrap.normal}
+  line-height: ${theme.typography.lineHeight.relaxed};
+
+  /* Responsive typography */
+  @media (max-width: ${theme.breakpoints.sm}) {
+    font-size: ${theme.fontSizes.xs};
+    padding: ${theme.spacing.xs};
+  }
 `;
 
 const StartButton = styled.button`
@@ -134,11 +161,15 @@ const CompletionMessage = styled.div<{ passed: boolean }>`
   font-family: 'Press Start 2P', ${theme.fonts.primary};
   font-size: ${theme.fontSizes.md};
   text-align: center;
-  padding: ${theme.spacing.lg};
+  padding: clamp(${theme.spacing.md}, 3vw, ${theme.spacing.lg});
   margin-top: ${theme.spacing.md};
   border-radius: ${theme.borderRadius.md};
   border: 3px solid;
-  
+
+  /* Enhanced word wrapping for completion messages */
+  ${theme.typography.wordWrap.normal}
+  line-height: ${theme.typography.lineHeight.normal};
+
   ${({ passed }) => passed ? `
     background: linear-gradient(135deg, ${theme.colors.ui.success} 0%, #4CAF50 100%);
     border-color: #4CAF50;
@@ -148,6 +179,12 @@ const CompletionMessage = styled.div<{ passed: boolean }>`
     border-color: #FF9800;
     color: ${theme.colors.ui.text};
   `}
+
+  /* Responsive typography */
+  @media (max-width: ${theme.breakpoints.sm}) {
+    font-size: ${theme.fontSizes.sm};
+    padding: ${theme.spacing.md};
+  }
 `;
 
 export const TypingArea: React.FC<TypingAreaProps> = ({

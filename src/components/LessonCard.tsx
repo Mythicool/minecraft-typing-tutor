@@ -47,16 +47,33 @@ const LessonTitle = styled.h3`
   color: ${theme.colors.secondary.diamond};
   margin: 0;
   margin-bottom: ${theme.spacing.xs};
-  line-height: 1.4;
+  line-height: ${theme.typography.lineHeight.tight};
+
+  /* Enhanced word wrapping for titles */
+  ${theme.typography.wordWrap.keepAll}
+
+  /* Responsive typography */
+  @media (max-width: ${theme.breakpoints.sm}) {
+    font-size: ${theme.fontSizes.sm};
+  }
 `;
 
 const LessonDescription = styled.p`
   font-family: 'Press Start 2P', ${theme.fonts.primary};
   font-size: ${theme.fontSizes.xs};
   color: ${theme.colors.ui.textSecondary};
-  line-height: 1.6;
+  line-height: ${theme.typography.lineHeight.relaxed};
   margin: 0;
   margin-bottom: ${theme.spacing.md};
+
+  /* Enhanced word wrapping for descriptions */
+  ${theme.typography.wordWrap.normal}
+
+  /* Responsive typography */
+  @media (max-width: ${theme.breakpoints.sm}) {
+    font-size: ${theme.fontSizes['xs-fixed']};
+    line-height: ${theme.typography.lineHeight.normal};
+  }
 `;
 
 const DifficultyBadge = styled.div<{ difficulty: string }>`
@@ -200,10 +217,20 @@ const ContentPreview = styled.div`
   padding: ${theme.spacing.sm};
   border-radius: ${theme.borderRadius.sm};
   margin-bottom: ${theme.spacing.md};
-  line-height: 1.4;
+  line-height: ${theme.typography.lineHeight.normal};
+
+  /* Enhanced word wrapping for content preview */
+  ${theme.typography.wordWrap.normal}
   overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+
+  /* Responsive typography */
+  @media (max-width: ${theme.breakpoints.sm}) {
+    font-size: ${theme.fontSizes['xs-fixed']};
+    -webkit-line-clamp: 1;
+  }
 `;
 
 export const LessonCard: React.FC<LessonCardProps> = ({

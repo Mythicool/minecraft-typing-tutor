@@ -3,10 +3,15 @@ import { theme } from './theme';
 
 // Container components
 export const Container = styled.div`
-  max-width: 1200px;
+  max-width: ${theme.typography.container.maxWidth};
   margin: 0 auto;
-  padding: 0 ${theme.spacing.md};
-  
+  padding: ${theme.typography.container.padding};
+
+  /* Enhanced responsive layout */
+  display: flex;
+  flex-direction: column;
+  gap: ${theme.spacing.md};
+
   @media (min-width: ${theme.breakpoints.sm}) {
     padding: 0 ${theme.spacing.lg};
   }
@@ -27,10 +32,13 @@ export const Card = styled.div<{ variant?: 'default' | 'grass' | 'stone' | 'wood
   }};
   border: 3px solid ${theme.colors.ui.border};
   border-radius: ${theme.borderRadius.md};
-  padding: ${theme.spacing.lg};
+  padding: clamp(${theme.spacing.md}, 3vw, ${theme.spacing.lg});
   box-shadow: ${theme.shadows.md};
   position: relative;
-  
+
+  /* Enhanced word wrapping for card content */
+  ${theme.typography.wordWrap.normal}
+
   /* Minecraft block-style border effect */
   &::before {
     content: '';
@@ -39,19 +47,24 @@ export const Card = styled.div<{ variant?: 'default' | 'grass' | 'stone' | 'wood
     left: -3px;
     right: -3px;
     bottom: -3px;
-    background: linear-gradient(45deg, 
-      rgba(255,255,255,0.2) 0%, 
-      transparent 50%, 
+    background: linear-gradient(45deg,
+      rgba(255,255,255,0.2) 0%,
+      transparent 50%,
       rgba(0,0,0,0.2) 100%
     );
     border-radius: ${theme.borderRadius.md};
     z-index: -1;
   }
-  
+
   &:hover {
     transform: translateY(-2px);
     box-shadow: ${theme.shadows.lg};
     transition: ${theme.transitions.normal};
+  }
+
+  /* Responsive adjustments */
+  @media (max-width: ${theme.breakpoints.sm}) {
+    padding: ${theme.spacing.md};
   }
 `;
 
@@ -186,7 +199,11 @@ export const Title = styled.h1<{ size?: 'sm' | 'md' | 'lg' | 'xl' }>`
   text-shadow: 2px 2px 0px ${theme.colors.ui.background};
   margin-bottom: ${theme.spacing.lg};
   text-align: center;
-  
+
+  /* Enhanced word wrapping for titles */
+  ${theme.typography.wordWrap.keepAll}
+  line-height: ${theme.typography.lineHeight.tight};
+
   ${({ size = 'lg' }) => {
     switch (size) {
       case 'sm':
@@ -199,6 +216,12 @@ export const Title = styled.h1<{ size?: 'sm' | 'md' | 'lg' | 'xl' }>`
         return css`font-size: ${theme.fontSizes['3xl']};`;
     }
   }}
+
+  /* Responsive typography */
+  @media (max-width: ${theme.breakpoints.sm}) {
+    font-size: ${theme.fontSizes.xl};
+    text-shadow: 1px 1px 0px ${theme.colors.ui.background};
+  }
 `;
 
 export const Subtitle = styled.h2`
@@ -207,10 +230,19 @@ export const Subtitle = styled.h2`
   color: ${theme.colors.secondary.diamond};
   text-shadow: 1px 1px 0px ${theme.colors.ui.background};
   margin-bottom: ${theme.spacing.md};
+
+  /* Enhanced word wrapping for subtitles */
+  ${theme.typography.wordWrap.keepAll}
+  line-height: ${theme.typography.lineHeight.tight};
+
+  /* Responsive typography */
+  @media (max-width: ${theme.breakpoints.sm}) {
+    font-size: ${theme.fontSizes.base};
+  }
 `;
 
 // Layout components
-export const FlexContainer = styled.div<{ 
+export const FlexContainer = styled.div<{
   direction?: 'row' | 'column';
   justify?: 'flex-start' | 'center' | 'flex-end' | 'space-between' | 'space-around';
   align?: 'flex-start' | 'center' | 'flex-end' | 'stretch';
@@ -222,16 +254,33 @@ export const FlexContainer = styled.div<{
   justify-content: ${({ justify = 'flex-start' }) => justify};
   align-items: ${({ align = 'stretch' }) => align};
   gap: ${({ gap = theme.spacing.md }) => gap};
-  flex-wrap: ${({ wrap = false }) => wrap ? 'wrap' : 'nowrap'};
+  flex-wrap: ${({ wrap = true }) => wrap ? 'wrap' : 'nowrap'};
+
+  /* Enhanced responsive behavior */
+  @media (max-width: ${theme.breakpoints.sm}) {
+    flex-direction: column;
+    gap: ${theme.spacing.sm};
+  }
 `;
 
-export const Grid = styled.div<{ columns?: number; gap?: string }>`
+export const Grid = styled.div<{ columns?: number; gap?: string; minWidth?: string }>`
   display: grid;
-  grid-template-columns: repeat(${({ columns = 1 }) => columns}, 1fr);
+  grid-template-columns: repeat(auto-fit, minmax(${({ minWidth = '300px' }) => minWidth}, 1fr));
   gap: ${({ gap = theme.spacing.md }) => gap};
-  
-  @media (max-width: ${theme.breakpoints.md}) {
-    grid-template-columns: 1fr;
+  width: 100%;
+
+  /* Override for specific column count */
+  ${({ columns }) => columns && css`
+    grid-template-columns: repeat(${columns}, 1fr);
+
+    @media (max-width: ${theme.breakpoints.md}) {
+      grid-template-columns: 1fr;
+    }
+  `}
+
+  /* Responsive gap */
+  @media (max-width: ${theme.breakpoints.sm}) {
+    gap: ${theme.spacing.sm};
   }
 `;
 

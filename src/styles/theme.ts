@@ -46,16 +46,24 @@ export const theme = {
   },
   
   fontSizes: {
-    xs: '0.75rem',    // 12px
-    sm: '0.875rem',   // 14px
-    base: '1rem',     // 16px
-    md: '1rem',       // 16px (alias for base)
-    lg: '1.125rem',   // 18px
-    xl: '1.25rem',    // 20px
-    '2xl': '1.5rem',  // 24px
-    '3xl': '1.875rem', // 30px
-    '4xl': '2.25rem', // 36px
-    '5xl': '3rem',    // 48px
+    // Responsive font sizes using clamp() for fluid scaling
+    xs: 'clamp(0.625rem, 0.5rem + 0.5vw, 0.75rem)',      // 10-12px
+    sm: 'clamp(0.75rem, 0.625rem + 0.5vw, 0.875rem)',    // 12-14px
+    base: 'clamp(0.875rem, 0.75rem + 0.5vw, 1rem)',      // 14-16px
+    md: 'clamp(0.875rem, 0.75rem + 0.5vw, 1rem)',        // 14-16px (alias for base)
+    lg: 'clamp(1rem, 0.875rem + 0.5vw, 1.125rem)',       // 16-18px
+    xl: 'clamp(1.125rem, 1rem + 0.5vw, 1.25rem)',        // 18-20px
+    '2xl': 'clamp(1.25rem, 1.125rem + 0.5vw, 1.5rem)',   // 20-24px
+    '3xl': 'clamp(1.5rem, 1.25rem + 1vw, 1.875rem)',     // 24-30px
+    '4xl': 'clamp(1.875rem, 1.5rem + 1vw, 2.25rem)',     // 30-36px
+    '5xl': 'clamp(2.25rem, 1.875rem + 1.5vw, 3rem)',     // 36-48px
+
+    // Fixed sizes for specific use cases
+    'xs-fixed': '0.75rem',    // 12px
+    'sm-fixed': '0.875rem',   // 14px
+    'base-fixed': '1rem',     // 16px
+    'lg-fixed': '1.125rem',   // 18px
+    'xl-fixed': '1.25rem',    // 20px
   },
   
   spacing: {
@@ -105,6 +113,55 @@ export const theme = {
     fast: '150ms ease-in-out',
     normal: '250ms ease-in-out',
     slow: '350ms ease-in-out',
+  },
+
+  // Typography utilities for word-wrapping and responsive text
+  typography: {
+    // Word wrapping settings
+    wordWrap: {
+      normal: `
+        word-wrap: break-word;
+        overflow-wrap: break-word;
+        word-break: normal;
+        hyphens: none;
+        -webkit-hyphens: none;
+        -moz-hyphens: none;
+        -ms-hyphens: none;
+      `,
+      keepAll: `
+        word-wrap: break-word;
+        overflow-wrap: break-word;
+        word-break: keep-all;
+        hyphens: none;
+        -webkit-hyphens: none;
+        -moz-hyphens: none;
+        -ms-hyphens: none;
+      `,
+      preserve: `
+        white-space: pre-wrap;
+        word-wrap: break-word;
+        overflow-wrap: break-word;
+        word-break: normal;
+        hyphens: none;
+        -webkit-hyphens: none;
+        -moz-hyphens: none;
+        -ms-hyphens: none;
+      `,
+    },
+
+    // Line height settings for optimal readability
+    lineHeight: {
+      tight: '1.2',
+      normal: '1.4',
+      relaxed: '1.6',
+      loose: '1.8',
+    },
+
+    // Responsive container settings
+    container: {
+      maxWidth: 'min(100% - 2rem, 1200px)',
+      padding: 'clamp(1rem, 2vw, 2rem)',
+    },
   },
 } as const;
 

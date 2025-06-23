@@ -19,27 +19,44 @@ const Header = styled.header`
 
 const LessonGrid = styled.div`
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-  gap: ${theme.spacing.lg};
+  grid-template-columns: repeat(auto-fit, minmax(min(350px, 100%), 1fr));
+  gap: clamp(${theme.spacing.md}, 3vw, ${theme.spacing.lg});
   margin-bottom: ${theme.spacing['2xl']};
+  width: 100%;
+
+  /* Responsive adjustments */
+  @media (max-width: ${theme.breakpoints.sm}) {
+    grid-template-columns: 1fr;
+    gap: ${theme.spacing.md};
+  }
+
+  @media (min-width: ${theme.breakpoints.xl}) {
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+  }
 `;
 
 const FilterSection = styled.div`
   margin-bottom: ${theme.spacing.lg};
   display: flex;
   justify-content: center;
-  gap: ${theme.spacing.md};
+  gap: clamp(${theme.spacing.sm}, 2vw, ${theme.spacing.md});
   flex-wrap: wrap;
+  align-items: center;
+
+  /* Responsive adjustments */
+  @media (max-width: ${theme.breakpoints.sm}) {
+    gap: ${theme.spacing.xs};
+  }
 `;
 
 const FilterButton = styled.button<{ active: boolean }>`
   font-family: 'Press Start 2P', ${theme.fonts.primary};
   font-size: ${theme.fontSizes.xs};
-  padding: ${theme.spacing.sm} ${theme.spacing.md};
+  padding: clamp(${theme.spacing.xs}, 1.5vw, ${theme.spacing.sm}) clamp(${theme.spacing.sm}, 2vw, ${theme.spacing.md});
   border: 3px solid ${theme.colors.ui.border};
   border-radius: ${theme.borderRadius.sm};
-  background: ${({ active }) => 
-    active 
+  background: ${({ active }) =>
+    active
       ? `linear-gradient(135deg, ${theme.colors.secondary.diamond} 0%, ${theme.colors.secondary.diamond}80 100%)`
       : `linear-gradient(135deg, ${theme.colors.primary.stone} 0%, ${theme.colors.primary.cobblestone} 100%)`
   };
@@ -47,10 +64,20 @@ const FilterButton = styled.button<{ active: boolean }>`
   cursor: pointer;
   transition: ${theme.transitions.fast};
   text-transform: uppercase;
-  
+
+  /* Enhanced word wrapping for filter buttons */
+  ${theme.typography.wordWrap.keepAll}
+  line-height: ${theme.typography.lineHeight.normal};
+
   &:hover {
     transform: translateY(-2px);
     border-color: ${theme.colors.secondary.diamond};
+  }
+
+  /* Responsive typography */
+  @media (max-width: ${theme.breakpoints.sm}) {
+    font-size: ${theme.fontSizes['xs-fixed']};
+    padding: ${theme.spacing.xs} ${theme.spacing.sm};
   }
 `;
 
@@ -98,13 +125,17 @@ export const LessonsPage: React.FC<LessonsPageProps> = ({ onLessonSelect }) => {
       <Container>
         <Header>
           <Title size="xl">⛏️ Minecraft Typing Lessons ⛏️</Title>
-          <p style={{ 
-            fontFamily: 'Press Start 2P', 
+          <p className="instruction-text" style={{
+            fontFamily: 'Press Start 2P',
             fontSize: theme.fontSizes.sm,
             color: theme.colors.ui.textSecondary,
-            lineHeight: 1.6,
-            maxWidth: '600px',
-            margin: '0 auto'
+            lineHeight: theme.typography.lineHeight.relaxed,
+            maxWidth: 'min(600px, 100% - 2rem)',
+            margin: '0 auto',
+            wordWrap: 'break-word',
+            overflowWrap: 'break-word',
+            wordBreak: 'normal',
+            hyphens: 'none'
           }}>
             Master your typing skills with Minecraft-themed lessons!
             <br />

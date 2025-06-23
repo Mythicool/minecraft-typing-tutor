@@ -14,24 +14,32 @@ export const GlobalStyles = createGlobalStyle`
   html {
     font-size: 16px;
     scroll-behavior: smooth;
+
+    /* Improve text rendering */
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
   
   body {
     font-family: 'Press Start 2P', ${theme.fonts.primary};
     font-size: ${theme.fontSizes.sm};
-    line-height: 1.6;
+    line-height: ${theme.typography.lineHeight.normal};
     color: ${theme.colors.ui.text};
-    background: linear-gradient(135deg, 
-      ${theme.colors.primary.dirt} 0%, 
-      ${theme.colors.primary.stone} 50%, 
+    background: linear-gradient(135deg,
+      ${theme.colors.primary.dirt} 0%,
+      ${theme.colors.primary.stone} 50%,
       ${theme.colors.primary.cobblestone} 100%
     );
     min-height: 100vh;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    
+
+    /* Enhanced word wrapping for all text */
+    ${theme.typography.wordWrap.normal}
+
     /* Minecraft-style pixelated background pattern */
-    background-image: 
+    background-image:
       radial-gradient(circle at 25% 25%, rgba(255,255,255,0.1) 2px, transparent 2px),
       radial-gradient(circle at 75% 75%, rgba(255,255,255,0.05) 2px, transparent 2px);
     background-size: 20px 20px;
@@ -42,6 +50,11 @@ export const GlobalStyles = createGlobalStyle`
     min-height: 100vh;
     display: flex;
     flex-direction: column;
+
+    /* Responsive container */
+    max-width: ${theme.typography.container.maxWidth};
+    margin: 0 auto;
+    padding: ${theme.typography.container.padding};
   }
   
   /* Scrollbar styling */
@@ -112,12 +125,18 @@ export const GlobalStyles = createGlobalStyle`
     list-style: none;
   }
   
-  /* Heading styles */
+  /* Enhanced typography for all text elements */
   h1, h2, h3, h4, h5, h6 {
     font-family: 'Press Start 2P', ${theme.fonts.heading};
     font-weight: normal;
-    line-height: 1.2;
+    line-height: ${theme.typography.lineHeight.tight};
     margin-bottom: ${theme.spacing.md};
+    ${theme.typography.wordWrap.keepAll}
+  }
+
+  p, div, span, li {
+    ${theme.typography.wordWrap.normal}
+    line-height: ${theme.typography.lineHeight.normal};
   }
   
   h1 {
@@ -140,9 +159,61 @@ export const GlobalStyles = createGlobalStyle`
   /* Paragraph styles */
   p {
     margin-bottom: ${theme.spacing.md};
-    line-height: 1.8;
+    line-height: ${theme.typography.lineHeight.relaxed};
+  }
+
+  /* Specific typography for different content types */
+  .typing-content {
+    ${theme.typography.wordWrap.preserve}
+    line-height: ${theme.typography.lineHeight.relaxed};
+    font-family: ${theme.fonts.mono};
+  }
+
+  .instruction-text {
+    ${theme.typography.wordWrap.normal}
+    line-height: ${theme.typography.lineHeight.relaxed};
+  }
+
+  .ui-text {
+    ${theme.typography.wordWrap.keepAll}
+    line-height: ${theme.typography.lineHeight.normal};
+  }
+
+  /* Responsive layout utilities */
+  .responsive-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(300px, 100%), 1fr));
+    gap: ${theme.spacing.md};
+    width: 100%;
+  }
+
+  .responsive-flex {
+    display: flex;
+    flex-wrap: wrap;
+    gap: ${theme.spacing.md};
+    align-items: stretch;
+  }
+
+  .responsive-flex > * {
+    flex: 1 1 min(300px, 100%);
   }
   
+  /* Responsive breakpoint utilities */
+  @media (max-width: ${theme.breakpoints.sm}) {
+    .hide-mobile { display: none !important; }
+    .responsive-text { font-size: ${theme.fontSizes.sm} !important; }
+
+    /* Improve mobile typography */
+    body { font-size: ${theme.fontSizes.xs}; }
+    h1 { font-size: ${theme.fontSizes['2xl']}; }
+    h2 { font-size: ${theme.fontSizes.xl}; }
+    h3 { font-size: ${theme.fontSizes.lg}; }
+  }
+
+  @media (min-width: ${theme.breakpoints.md}) {
+    .hide-desktop { display: none !important; }
+  }
+
   /* Utility classes */
   .sr-only {
     position: absolute;

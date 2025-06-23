@@ -27,14 +27,24 @@ const AppContainer = styled.div`
 // Removed unused styled components
 
 const LessonView = styled.div`
-  max-width: 1000px;
+  max-width: min(1000px, 100% - 2rem);
   margin: 0 auto;
+  padding: 0 ${theme.spacing.md};
+
+  /* Enhanced responsive layout */
+  display: flex;
+  flex-direction: column;
+  gap: ${theme.spacing.md};
+
+  @media (min-width: ${theme.breakpoints.md}) {
+    padding: 0;
+  }
 `;
 
 const BackButton = styled.button`
   font-family: 'Press Start 2P', ${theme.fonts.primary};
   font-size: ${theme.fontSizes.sm};
-  padding: ${theme.spacing.sm} ${theme.spacing.md};
+  padding: clamp(${theme.spacing.xs}, 2vw, ${theme.spacing.sm}) clamp(${theme.spacing.sm}, 3vw, ${theme.spacing.md});
   background: linear-gradient(135deg, ${theme.colors.primary.stone} 0%, ${theme.colors.primary.cobblestone} 100%);
   border: 3px solid ${theme.colors.primary.cobblestone};
   border-radius: ${theme.borderRadius.sm};
@@ -43,9 +53,19 @@ const BackButton = styled.button`
   margin-bottom: ${theme.spacing.lg};
   transition: ${theme.transitions.fast};
 
+  /* Enhanced word wrapping for button text */
+  ${theme.typography.wordWrap.keepAll}
+  line-height: ${theme.typography.lineHeight.normal};
+
   &:hover {
     background: linear-gradient(135deg, ${theme.colors.primary.cobblestone} 0%, ${theme.colors.primary.stone} 100%);
     transform: translateY(-2px);
+  }
+
+  /* Responsive typography */
+  @media (max-width: ${theme.breakpoints.sm}) {
+    font-size: ${theme.fontSizes.xs};
+    padding: ${theme.spacing.xs} ${theme.spacing.sm};
   }
 `;
 
@@ -151,13 +171,18 @@ function App() {
                       </BackButton>
 
                       <Title size="md">{currentLesson.title}</Title>
-                      <p style={{
+                      <p className="instruction-text" style={{
                         fontFamily: 'Press Start 2P',
                         fontSize: theme.fontSizes.xs,
                         color: theme.colors.ui.textSecondary,
                         textAlign: 'center',
                         marginBottom: theme.spacing.lg,
-                        lineHeight: 1.6
+                        lineHeight: theme.typography.lineHeight.relaxed,
+                        maxWidth: '100%',
+                        wordWrap: 'break-word',
+                        overflowWrap: 'break-word',
+                        wordBreak: 'normal',
+                        hyphens: 'none'
                       }}>
                         {currentLesson.description}
                         <br />
