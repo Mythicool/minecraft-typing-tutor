@@ -12,6 +12,7 @@ import { AchievementsDisplay } from './components/AchievementsDisplay';
 import { LessonsPage } from './pages/LessonsPage';
 import { StatsPage } from './pages/StatsPage';
 import { HangmanPage } from './pages/HangmanPage';
+import { TypographyDemo } from './pages/TypographyDemo';
 import { useLessons } from './hooks/useLessons';
 import { userSettingsStorage, sessionsStorage } from './utils/storage';
 import { checkAchievements } from './data/achievements';
@@ -214,6 +215,7 @@ function App() {
             <Route path="/practice" element={<LessonsPage onLessonSelect={handleLessonSelect} />} />
             <Route path="/hangman" element={<HangmanPage />} />
             <Route path="/stats" element={<StatsPage />} />
+            <Route path="/typography-demo" element={<TypographyDemo />} />
             <Route
               path="/achievements"
               element={
