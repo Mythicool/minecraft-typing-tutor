@@ -592,6 +592,24 @@ export const lessons: Lesson[] = [
     minWpmToPass: 40,
     minAccuracyToPass: 92,
   },
+
+  // Word-Wrapping Test Lesson
+  {
+    id: 'word-wrapping-test',
+    title: 'Word-Wrapping Test',
+    description: 'Test lesson to verify words never break mid-word',
+    difficulty: 'intermediate',
+    category: 'general',
+    content: {
+      type: 'words',
+      data: ['diamond', 'emerald', 'redstone', 'lapis', 'obsidian', 'quartz', 'netherite', 'copper', 'amethyst', 'deepslate'],
+      instructions: 'Type these words carefully. They should never break mid-word with line breaks!',
+    },
+    unlocked: true,
+    completed: false,
+    minWpmToPass: 25,
+    minAccuracyToPass: 85,
+  },
 ];
 
 // Helper function to get lessons by difficulty

@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import { theme } from '../styles/theme';
 import { Container, Title, Subtitle, Grid } from '../styles/StyledComponents';
 import { wordWrappingTestCases, contentTypeExamples, runTypographyTests } from '../utils/typographyTest';
+import { runWordWrappingTests, testData } from '../utils/wordWrappingTest';
 
 const DemoSection = styled.section`
   margin-bottom: ${theme.spacing['2xl']};
@@ -149,6 +150,7 @@ const TestCaseExpected = styled.div`
 export const TypographyDemo: React.FC = () => {
   const containerRef = useRef<HTMLDivElement>(null);
   const [testResults, setTestResults] = useState<any>(null);
+  const [wordWrappingResults, setWordWrappingResults] = useState<any>(null);
 
   const longMinecraftWords = [
     'minecraft:netherite_sword',
@@ -163,6 +165,11 @@ export const TypographyDemo: React.FC = () => {
       const results = runTypographyTests(containerRef.current);
       setTestResults(results);
     }
+  };
+
+  const runWordWrappingTest = () => {
+    const results = runWordWrappingTests();
+    setWordWrappingResults(results);
   };
 
   const typingContent = `
@@ -211,6 +218,61 @@ UI Text Elements • Navigation Items • Button Labels • Status Messages
             )}
           </TestResults>
         )}
+      </DemoSection>
+
+      <DemoSection>
+        <DemoTitle>🔧 Word-Wrapping Fix Testing</DemoTitle>
+        <TestButton onClick={runWordWrappingTest}>
+          Test Word-Wrapping Fix
+        </TestButton>
+
+        {wordWrappingResults && (
+          <TestResults>
+            <div style={{ marginBottom: theme.spacing.sm }}>
+              <strong>Word-Wrapping Test Results:</strong> {wordWrappingResults.summary}
+              {wordWrappingResults.overallPassed ? ' ✅' : ' ❌'}
+            </div>
+            {wordWrappingResults.tests.map((test: any, index: number) => (
+              <div key={index} style={{
+                color: test.passed ? theme.colors.ui.success : theme.colors.ui.error,
+                marginBottom: theme.spacing.xs
+              }}>
+                {test.passed ? '✅' : '❌'} {test.name}: {test.details}
+              </div>
+            ))}
+          </TestResults>
+        )}
+
+        <div style={{ marginTop: theme.spacing.md }}>
+          <h4 style={{
+            fontFamily: 'Press Start 2P',
+            fontSize: theme.fontSizes.sm,
+            color: theme.colors.secondary.diamond,
+            marginBottom: theme.spacing.sm
+          }}>
+            Problematic Word List Test
+          </h4>
+          <div style={{
+            background: theme.colors.ui.background,
+            padding: theme.spacing.md,
+            borderRadius: theme.borderRadius.sm,
+            border: `2px solid ${theme.colors.ui.border}`,
+            fontFamily: theme.fonts.mono,
+            fontSize: theme.fontSizes.base,
+            lineHeight: theme.typography.lineHeight.relaxed,
+            maxWidth: '400px',
+            whiteSpace: 'pre-wrap',
+            wordWrap: 'break-word',
+            overflowWrap: 'break-word',
+            wordBreak: 'normal',
+            hyphens: 'none'
+          }}>
+            {testData.problematicWordList}
+          </div>
+          <p style={{ fontSize: theme.fontSizes.xs, color: theme.colors.ui.textMuted, marginTop: theme.spacing.xs }}>
+            ✅ Words like "deepslate", "netherite", "obsidian" should wrap as complete units
+          </p>
+        </div>
       </DemoSection>
 
       <DemoSection>

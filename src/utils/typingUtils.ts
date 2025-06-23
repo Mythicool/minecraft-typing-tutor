@@ -102,6 +102,65 @@ export const generateCharacterStates = (
 };
 
 /**
+ * Group character states into words for proper word-wrapping
+ */
+export interface WordGroup {
+  word: string;
+  characters: CharacterState[];
+  startIndex: number;
+  endIndex: number;
+}
+
+export const generateWordGroups = (characterStates: CharacterState[]): WordGroup[] => {
+  const words: WordGroup[] = [];
+  let currentWord: CharacterState[] = [];
+  let wordStartIndex = 0;
+
+  characterStates.forEach((charState, index) => {
+    if (charState.char === ' ' || charState.char === '\n' || charState.char === '\t') {
+      // End current word if it has characters
+      if (currentWord.length > 0) {
+        words.push({
+          word: currentWord.map(c => c.char).join(''),
+          characters: [...currentWord],
+          startIndex: wordStartIndex,
+          endIndex: index - 1,
+        });
+        currentWord = [];
+      }
+
+      // Add the whitespace as a separate "word"
+      words.push({
+        word: charState.char,
+        characters: [charState],
+        startIndex: index,
+        endIndex: index,
+      });
+
+      wordStartIndex = index + 1;
+    } else {
+      // Add character to current word
+      if (currentWord.length === 0) {
+        wordStartIndex = index;
+      }
+      currentWord.push(charState);
+    }
+  });
+
+  // Add final word if it exists
+  if (currentWord.length > 0) {
+    words.push({
+      word: currentWord.map(c => c.char).join(''),
+      characters: [...currentWord],
+      startIndex: wordStartIndex,
+      endIndex: characterStates.length - 1,
+    });
+  }
+
+  return words;
+};
+
+/**
  * Validate user input against expected text
  */
 export const validateInput = (

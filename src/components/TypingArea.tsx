@@ -2,6 +2,7 @@ import React, { useRef, useEffect } from 'react';
 import styled from 'styled-components';
 import { useTyping } from '../hooks/useTyping';
 import { theme } from '../styles/theme';
+import { generateWordGroups } from '../utils/typingUtils';
 import type { TypingStats } from '../utils/typingUtils';
 
 interface TypingAreaProps {
@@ -37,8 +38,15 @@ const TextDisplay = styled.div`
   min-height: clamp(150px, 25vh, 250px);
   position: relative;
 
-  /* Enhanced word wrapping for typing content */
-  ${theme.typography.wordWrap.preserve}
+  /* Enhanced word wrapping for typing content - preserve formatting but allow word wrapping */
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  word-break: normal;
+  hyphens: none;
+  -webkit-hyphens: none;
+  -moz-hyphens: none;
+  -ms-hyphens: none;
 
   /* Minecraft-style inner shadow */
   box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3);
@@ -60,6 +68,12 @@ const TextDisplay = styled.div`
   }
 `;
 
+const WordGroup = styled.span`
+  /* Ensure words wrap as complete units */
+  display: inline-block;
+  white-space: nowrap;
+`;
+
 const Character = styled.span<{ status: string }>`
   color: ${({ status }) => {
     switch (status) {
@@ -76,7 +90,7 @@ const Character = styled.span<{ status: string }>`
         return theme.colors.typing.pending;
     }
   }};
-  
+
   background-color: ${({ status }) => {
     if (status === 'current') {
       return theme.colors.typing.current;
@@ -86,13 +100,53 @@ const Character = styled.span<{ status: string }>`
     }
     return 'transparent';
   }};
-  
+
   ${({ status }) => status === 'current' && `
     animation: pulse 1s infinite;
     color: ${theme.colors.ui.background};
     font-weight: bold;
   `}
-  
+
+  ${({ status }) => status === 'incorrect' && `
+    text-decoration: underline;
+    text-decoration-color: ${theme.colors.typing.incorrect};
+    animation: shake 0.3s ease-in-out;
+  `}
+`;
+
+const WhitespaceCharacter = styled.span<{ status: string }>`
+  color: ${({ status }) => {
+    switch (status) {
+      case 'correct':
+        return theme.colors.typing.correct;
+      case 'incorrect':
+        return theme.colors.typing.incorrect;
+      case 'current':
+        return theme.colors.typing.current;
+      case 'completed':
+        return theme.colors.typing.completed;
+      case 'pending':
+      default:
+        return theme.colors.typing.pending;
+    }
+  }};
+
+  background-color: ${({ status }) => {
+    if (status === 'current') {
+      return theme.colors.typing.current;
+    }
+    if (status === 'incorrect') {
+      return 'rgba(244, 67, 54, 0.2)';
+    }
+    return 'transparent';
+  }};
+
+  ${({ status }) => status === 'current' && `
+    animation: pulse 1s infinite;
+    color: ${theme.colors.ui.background};
+    font-weight: bold;
+  `}
+
   ${({ status }) => status === 'incorrect' && `
     text-decoration: underline;
     text-decoration-color: ${theme.colors.typing.incorrect};
@@ -197,7 +251,7 @@ export const TypingArea: React.FC<TypingAreaProps> = ({
   minAccuracy = 0,
 }) => {
   const inputRef = useRef<HTMLInputElement>(null);
-  
+
   const {
     typingState,
     characterStates,
@@ -214,6 +268,9 @@ export const TypingArea: React.FC<TypingAreaProps> = ({
     minAccuracy,
     autoStart: false,
   });
+
+  // Generate word groups for proper word wrapping
+  const wordGroups = generateWordGroups(characterStates);
 
   // Focus input when component mounts or when starting
   useEffect(() => {
@@ -265,12 +322,29 @@ export const TypingArea: React.FC<TypingAreaProps> = ({
       )}
       
       <TextDisplay onClick={handleTextClick}>
-        {characterStates.map((charState, index) => (
-          <Character key={index} status={charState.status}>
-            {charState.char === ' ' ? '\u00A0' : charState.char}
-          </Character>
-        ))}
-        
+        {wordGroups.map((wordGroup, groupIndex) => {
+          // Handle whitespace characters (spaces, newlines, tabs)
+          if (wordGroup.word === ' ' || wordGroup.word === '\n' || wordGroup.word === '\t') {
+            const charState = wordGroup.characters[0];
+            return (
+              <WhitespaceCharacter key={`whitespace-${groupIndex}`} status={charState.status}>
+                {wordGroup.word === ' ' ? '\u00A0' : wordGroup.word}
+              </WhitespaceCharacter>
+            );
+          }
+
+          // Handle regular words - wrap them in WordGroup to prevent breaking
+          return (
+            <WordGroup key={`word-${groupIndex}`}>
+              {wordGroup.characters.map((charState, charIndex) => (
+                <Character key={`${groupIndex}-${charIndex}`} status={charState.status}>
+                  {charState.char}
+                </Character>
+              ))}
+            </WordGroup>
+          );
+        })}
+
         <HiddenInput
           ref={inputRef}
           type="text"
