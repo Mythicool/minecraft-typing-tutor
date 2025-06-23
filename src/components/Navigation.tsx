@@ -3,7 +3,7 @@ import { Link, useLocation } from 'react-router-dom';
 import styled from 'styled-components';
 import { theme } from '../styles/theme';
 import { FlexContainer } from '../styles/StyledComponents';
-import { Home, BookOpen, BarChart3, Trophy, Settings, User } from 'lucide-react';
+import { Home, BookOpen, BarChart3, Trophy, Settings, User, Gamepad2 } from 'lucide-react';
 
 const NavContainer = styled.nav`
   background: linear-gradient(135deg, ${theme.colors.primary.stone} 0%, ${theme.colors.primary.cobblestone} 100%);
@@ -130,6 +130,7 @@ export const Navigation: React.FC<NavigationProps> = ({
   const navItems = [
     { path: '/', label: 'Lessons', icon: <Home /> },
     { path: '/practice', label: 'Practice', icon: <BookOpen /> },
+    { path: '/hangman', label: 'Hangman', icon: <Gamepad2 /> },
     { path: '/stats', label: 'Stats', icon: <BarChart3 /> },
     { path: '/achievements', label: 'Achievements', icon: <Trophy /> },
     { path: '/settings', label: 'Settings', icon: <Settings /> },

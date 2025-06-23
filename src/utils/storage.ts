@@ -1,10 +1,12 @@
-import type { UserProgress, UserSettings, TypingSession, StorageData } from '../types/index';
+import type { UserProgress, UserSettings, TypingSession, StorageData, HangmanSession, HangmanStats } from '../types/index';
 
 const STORAGE_KEYS = {
   USER_PROGRESS: 'minecraft-typing-tutor-progress',
   USER_SETTINGS: 'minecraft-typing-tutor-settings',
   SESSIONS: 'minecraft-typing-tutor-sessions',
   LESSONS: 'minecraft-typing-tutor-lessons',
+  HANGMAN_SESSIONS: 'minecraft-typing-tutor-hangman-sessions',
+  HANGMAN_STATS: 'minecraft-typing-tutor-hangman-stats',
 } as const;
 
 // Default user progress
@@ -203,6 +205,103 @@ export const dataStorage = {
     userProgressStorage.reset();
     userSettingsStorage.reset();
     sessionsStorage.clear();
+    hangmanSessionsStorage.clear();
+    hangmanStatsStorage.reset();
+  },
+};
+
+// Default hangman stats
+const defaultHangmanStats: HangmanStats = {
+  totalGames: 0,
+  gamesWon: 0,
+  gamesLost: 0,
+  winRate: 0,
+  averageIncorrectGuesses: 0,
+  bestScore: 0,
+  totalScore: 0,
+  averageTime: 0,
+  bestTime: 0,
+  hintsUsed: 0,
+  currentStreak: 0,
+  longestStreak: 0,
+};
+
+/**
+ * Hangman Sessions Storage
+ */
+export const hangmanSessionsStorage = {
+  get: (): HangmanSession[] => {
+    return storage.get(STORAGE_KEYS.HANGMAN_SESSIONS, []);
+  },
+
+  add: (session: HangmanSession): void => {
+    const sessions = hangmanSessionsStorage.get();
+    sessions.push(session);
+    storage.set(STORAGE_KEYS.HANGMAN_SESSIONS, sessions);
+  },
+
+  clear: (): void => {
+    storage.set(STORAGE_KEYS.HANGMAN_SESSIONS, []);
+  },
+
+  getRecent: (limit: number = 10): HangmanSession[] => {
+    const sessions = hangmanSessionsStorage.get();
+    return sessions
+      .sort((a, b) => new Date(b.startTime).getTime() - new Date(a.startTime).getTime())
+      .slice(0, limit);
+  },
+};
+
+/**
+ * Hangman Stats Storage
+ */
+export const hangmanStatsStorage = {
+  get: (): HangmanStats => {
+    return storage.get(STORAGE_KEYS.HANGMAN_STATS, defaultHangmanStats);
+  },
+
+  set: (stats: HangmanStats): void => {
+    storage.set(STORAGE_KEYS.HANGMAN_STATS, stats);
+  },
+
+  update: (session: HangmanSession): HangmanStats => {
+    const currentStats = hangmanStatsStorage.get();
+    const sessions = hangmanSessionsStorage.get();
+
+    const newStats: HangmanStats = {
+      totalGames: currentStats.totalGames + 1,
+      gamesWon: currentStats.gamesWon + (session.won ? 1 : 0),
+      gamesLost: currentStats.gamesLost + (session.won ? 0 : 1),
+      winRate: 0, // Will be calculated below
+      averageIncorrectGuesses: 0, // Will be calculated below
+      bestScore: Math.max(currentStats.bestScore, session.score),
+      totalScore: currentStats.totalScore + session.score,
+      averageTime: 0, // Will be calculated below
+      bestTime: currentStats.bestTime === 0 ? session.timeElapsed : Math.min(currentStats.bestTime, session.timeElapsed),
+      hintsUsed: currentStats.hintsUsed + session.hintsUsed,
+      currentStreak: session.won ? currentStats.currentStreak + 1 : 0,
+      longestStreak: 0, // Will be calculated below
+    };
+
+    // Calculate derived stats
+    newStats.winRate = newStats.totalGames > 0 ? (newStats.gamesWon / newStats.totalGames) * 100 : 0;
+    newStats.longestStreak = Math.max(currentStats.longestStreak, newStats.currentStreak);
+
+    // Calculate averages from all sessions
+    if (sessions.length > 0) {
+      const totalIncorrectGuesses = sessions.reduce((sum, s) => sum + s.incorrectGuesses, 0);
+      const totalTime = sessions.reduce((sum, s) => sum + s.timeElapsed, 0);
+
+      newStats.averageIncorrectGuesses = totalIncorrectGuesses / sessions.length;
+      newStats.averageTime = totalTime / sessions.length;
+    }
+
+    hangmanStatsStorage.set(newStats);
+    return newStats;
+  },
+
+  reset: (): void => {
+    hangmanStatsStorage.set(defaultHangmanStats);
   },
 };
 

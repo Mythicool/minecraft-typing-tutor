@@ -42,14 +42,17 @@ export interface LessonContent {
 
 export type DifficultyLevel = 'beginner' | 'intermediate' | 'advanced';
 
-export type LessonCategory = 
+export type LessonCategory =
   | 'blocks'
-  | 'items' 
+  | 'items'
   | 'mobs'
   | 'biomes'
   | 'crafting'
   | 'commands'
-  | 'general';
+  | 'general'
+  | 'structures'
+  | 'pvp'
+  | 'farming';
 
 export type ContentType = 'words' | 'sentences' | 'paragraphs';
 
@@ -225,4 +228,76 @@ export interface TypingEvent {
   type: 'start' | 'progress' | 'complete' | 'error';
   data: unknown;
   timestamp: Date;
+}
+
+// Hangman Game Types
+export interface HangmanWord {
+  id: string;
+  word: string;
+  hint: string;
+  category: HangmanCategory;
+  difficulty: DifficultyLevel;
+}
+
+export interface HangmanGameState {
+  currentWord: HangmanWord | null;
+  guessedLetters: string[];
+  incorrectGuesses: number;
+  maxIncorrectGuesses: number;
+  gameStatus: HangmanGameStatus;
+  startTime?: Date;
+  endTime?: Date;
+  hintsUsed: number;
+  score: number;
+}
+
+export interface HangmanSession {
+  id: string;
+  wordId: string;
+  startTime: Date;
+  endTime?: Date;
+  completed: boolean;
+  won: boolean;
+  incorrectGuesses: number;
+  hintsUsed: number;
+  timeElapsed: number;
+  difficulty: DifficultyLevel;
+  score: number;
+}
+
+export interface HangmanStats {
+  totalGames: number;
+  gamesWon: number;
+  gamesLost: number;
+  winRate: number;
+  averageIncorrectGuesses: number;
+  bestScore: number;
+  totalScore: number;
+  averageTime: number;
+  bestTime: number;
+  hintsUsed: number;
+  currentStreak: number;
+  longestStreak: number;
+}
+
+export type HangmanCategory =
+  | 'blocks'
+  | 'items'
+  | 'mobs'
+  | 'biomes'
+  | 'crafting'
+  | 'commands'
+  | 'phrases'
+  | 'technical';
+
+export type HangmanGameStatus =
+  | 'playing'
+  | 'won'
+  | 'lost'
+  | 'paused';
+
+export interface HangmanGameProps {
+  onGameComplete: (session: HangmanSession) => void;
+  difficulty?: DifficultyLevel;
+  category?: HangmanCategory;
 }
